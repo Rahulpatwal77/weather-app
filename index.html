@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <!-- Flaticon CDN -->
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
+  <style>
+    :root {
+      --bg-light: linear-gradient(to right, #3b567e, #b6fbff);
+      --bg-dark: #121212;
+      --text-light: #000;
+      --text-dark: #f1f1f1;
+      --card-light: rgba(255, 255, 255, 0.9);
+      --card-dark: #1e1e1e;
+      --button-bg: #0077cc;
+      --button-bg-hover: #005fa3;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg-light);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      transition: background 0.3s, color 0.3s;
+      color: var(--text-light);
+    }
+
+    body.dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .weather-container {
+      background-color: var(--card-light);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+      position: relative;
+    }
+
+    body.dark-mode .weather-container {
+      background-color: var(--card-dark);
+    }
+
+    .weather-container h2 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 85%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 24px;
+      background-color: var(--button-bg);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: var(--button-bg-hover);
+    }
+
+    .result {
+      margin-top: 20px;
+      text-align: left;
+      font-size: 16px;
+    }
+
+    .toggle-mode {
+      margin-top: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #0077cc;
+      display: flex;
+      align-items: right;
+      justify-content: right;
+      gap: 8px;
+    }
+
+    .dark-icon {
+      font-size: 22px;
+    }
+
+    img {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-container">
+    <div class="toggle-mode" onclick="toggleMode()">
+        <i id="themeIcon" class="fi fi-rr-moon dark-icon"></i> 
+      </div>
+    <h2><i class="fi fi-rr-clouds"></i> Weather App</h2>
+    <input type="text" id="locationInput" placeholder="Enter location">
+    <button onclick="getWeather()">Get Weather</button>
+    <div class="result" id="weatherResult"></div>
+  
+  </div>
+
+  <script>
+    async function getWeather() {
+      const location = document.getElementById('locationInput').value;
+      const apiKey = 'f3c162579968412dbcb35057250604';
+      const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.error) {
+          document.getElementById('weatherResult').innerHTML = `<p style="color:red">${data.error.message}</p>`;
+          return;
+        }
+
+        const weatherInfo = `
+          <h3>${data.location.name}, ${data.location.country}</h3>
+          <p><strong>Temperature:</strong> ${data.current.temp_c}°C</p>
+          <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+          <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
+          <p><strong>Wind Speed:</strong> ${data.current.wind_kph} kph</p>
+          <p><strong>Air Quality Index (PM2.5):</strong> ${data.current.air_quality.pm2_5.toFixed(2)}</p>
+          <img src="${data.current.condition.icon}" alt="Weather Icon">
+        `;
+
+        document.getElementById('weatherResult').innerHTML = weatherInfo;
+      } catch (error) {
+        document.getElementById('weatherResult').innerHTML = `<p style="color:red">Failed to fetch weather data.</p>`;
+      }
+    }
+
+    function toggleMode() {
+      const body = document.body;
+      const themeIcon = document.getElementById('themeIcon');
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        themeIcon.classList.remove('fi-rr-moon');
+        themeIcon.classList.add('fi-rr-sun');
+      } else {
+        themeIcon.classList.remove('fi-rr-sun');
+        themeIcon.classList.add('fi-rr-moon');
+      }
+    }
+  </script>
+</body>
+</html>
