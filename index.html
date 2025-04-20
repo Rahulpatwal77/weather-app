@@ -17,7 +17,7 @@
         --text-dark: #f1f1f1;
         --card-light: rgba(255, 255, 255, 0.9);
         --card-dark: #1e1e1e;
-        --button-bg: #131017;
+        --button-bg: #100e13;
         --button-bg-hover: #000000d1;
       }
 
@@ -39,8 +39,7 @@
         color: var(--text-dark);
       }
       .weather-container {
-        /* background-color: var(--card-light); */
-        /* background-image: url(Day.webp); */
+      
         background-size: cover;
         padding: 20px;
         border-radius: 20px;
@@ -52,9 +51,7 @@
         position: relative;
       }
 
-      body.dark-mode .weather-container {
-        /* background-color: var(--card-dark); */
-        /* background-image: url(night.webp); */
+      body.dark-mode .weather-container {      
         opacity: 90%;
       }
 
@@ -192,7 +189,6 @@
           ).innerHTML = `<p style="color:red">Failed to fetch weather data.</p>`;
         }
       }
-
       function toggleMode() {
         const body = document.body;
         const themeIcon = document.getElementById("themeIcon");
